@@ -52,12 +52,7 @@ pip install -r requirements.txt
 
 ## Running the Application
 
-1. Initialize the database:
-```bash
-flask db upgrade
-```
-
-2. Start the development server:
+1. Start the development server:
 ```bash
 python run.py
 ```
