@@ -7,6 +7,7 @@ class Permission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(255), nullable=False)
     method = db.Column(db.String(10), nullable=False)  # GET, POST, PUT, DELETE, etc.
+    entity = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -18,6 +19,7 @@ class Permission(db.Model):
             'id': self.id,
             'url': self.url,
             'method': self.method,
+            'entity': self.entity,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }

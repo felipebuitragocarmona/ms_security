@@ -34,3 +34,6 @@ def delete_permission(permission_id):
     """Delete a permission"""
     result, status_code = PermissionController.delete(permission_id)
     return jsonify(result), status_code
+@permission_bp.route('/grouped/role/<int:role_id>', methods=['GET'])
+def get_permissions_grouped(role_id):
+    return PermissionController.get_grouped_permissions(role_id)
