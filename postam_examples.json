@@ -1462,6 +1462,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "permissions/grouped/role",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"/users\",\n    \"method\": \"GET\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/permissions/grouped/role/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"permissions",
+								"grouped",
+								"role",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
