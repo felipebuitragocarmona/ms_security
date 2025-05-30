@@ -1,7 +1,11 @@
 from flask import Blueprint, request, jsonify
 from app.business.controllers.profile_controller import ProfileController
+from flask import send_file, abort,send_from_directory
+import os
+from flask import current_app
 
 profile_bp = Blueprint('profile_bp', __name__)
+
 
 @profile_bp.route('/', methods=['GET'])
 def get_all_profiles():
@@ -42,3 +46,9 @@ def delete_profile(profile_id):
     """Delete a profile"""
     result, status_code = ProfileController.delete(profile_id)
     return jsonify(result), status_code
+
+@profile_bp.route('/<path:filename>', methods=['GET'])
+def get_image(filename):
+    image_path = os.path.join(current_app.root_path,'static' ,'uploads', 'profiles', filename)
+    if os.path.isfile(image_path):
+        return send_file(image_path, mimetype='image/png')

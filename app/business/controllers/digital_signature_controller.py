@@ -57,10 +57,11 @@ class DigitalSignatureController:
                 return {"error": "Digital signature image is required"}, 400
                 
             filename = secure_filename(f"{uuid.uuid4()}_{photo.filename}")
-            photo_path = os.path.join('signatures', filename)
+            photo_path = os.path.join('digital-signatures', filename)
             os.makedirs(os.path.join(current_app.config['UPLOAD_FOLDER'], 'signatures'), exist_ok=True)
             photo.save(os.path.join(current_app.config['UPLOAD_FOLDER'], photo_path))
-            
+            photo_path = photo_path.replace('\\', '/')
+
             new_signature = DigitalSignature(
                 user_id=user_id,
                 photo=photo_path
@@ -93,8 +94,10 @@ class DigitalSignatureController:
             
             # Save the new photo
             filename = secure_filename(f"{uuid.uuid4()}_{photo.filename}")
-            photo_path = os.path.join('signatures', filename)
+            photo_path = os.path.join('digital-signatures', filename)
             photo.save(os.path.join(current_app.config['UPLOAD_FOLDER'], photo_path))
+            photo_path=photo_path.replace('\\', '/')
+
             signature.photo = photo_path
                 
             db.session.commit()

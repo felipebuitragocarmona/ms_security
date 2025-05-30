@@ -1,20 +1,38 @@
 import os
-from flask import Flask
+from flask import Flask, request
 from app.data.database import db, migrate
 from app.config import Config
+from flask_cors import CORS
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
-    
-    # Initialize extensions
+
+    # Inicializar extensiones
     db.init_app(app)
     migrate.init_app(app, db)
-    
-    # Create upload directories if they don't exist
+
+    # Crear carpetas si no existen
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    
-    # Register blueprints
+
+    # Configurar CORS con permisos amplios
+    CORS(app, supports_credentials=True)
+
+    # Manejo explícito de solicitudes preflight
+    @app.before_request
+    def handle_options():
+        if request.method == 'OPTIONS':
+            return '', 200
+
+    @app.after_request
+    def add_cors_headers(response):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
+
+    # Registrar Blueprints
     from app.presentation.routes.user_routes import user_bp
     from app.presentation.routes.profile_routes import profile_bp
     from app.presentation.routes.address_routes import address_bp
@@ -28,7 +46,7 @@ def create_app(config_class=Config):
     from app.presentation.routes.permission_routes import permission_bp
     from app.presentation.routes.user_role_routes import user_role_bp
     from app.presentation.routes.role_permission_routes import role_permission_bp
-    
+
     app.register_blueprint(user_bp, url_prefix='/api/users')
     app.register_blueprint(profile_bp, url_prefix='/api/profiles')
     app.register_blueprint(address_bp, url_prefix='/api/addresses')
@@ -42,9 +60,9 @@ def create_app(config_class=Config):
     app.register_blueprint(permission_bp, url_prefix='/api/permissions')
     app.register_blueprint(user_role_bp, url_prefix='/api/user-roles')
     app.register_blueprint(role_permission_bp, url_prefix='/api/role-permissions')
-    
-    # Create tables
+
+    # Crear tablas
     with app.app_context():
         db.create_all()
-    
+
     return app

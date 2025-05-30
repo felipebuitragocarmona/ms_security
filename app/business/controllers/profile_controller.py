@@ -57,6 +57,7 @@ class ProfileController:
                 # Save photo if provided
                 filename = secure_filename(f"{uuid.uuid4()}_{photo.filename}")
                 photo_path = os.path.join('profiles', filename)
+                photo_path = photo_path.replace('\\', '/')
                 photo.save(os.path.join(current_app.config['UPLOAD_FOLDER'], photo_path))
             
             new_profile = Profile(
@@ -94,6 +95,7 @@ class ProfileController:
                 # Save the new photo
                 filename = secure_filename(f"{uuid.uuid4()}_{photo.filename}")
                 photo_path = os.path.join('profiles', filename)
+                photo_path = photo_path.replace('\\', '/')
                 photo.save(os.path.join(current_app.config['UPLOAD_FOLDER'], photo_path))
                 profile.photo = photo_path
                 
